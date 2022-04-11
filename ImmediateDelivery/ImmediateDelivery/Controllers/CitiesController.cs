@@ -54,7 +54,8 @@ namespace ImmediateDelivery.Controllers
             }
 
             Neighborhood neighborhood = await _context.Neighborhoods
-                .Include(c => c.Addresses)
+                .Include(n => n.City)
+                .Include(n => n.Addresses)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (neighborhood == null)
             {
@@ -237,7 +238,7 @@ namespace ImmediateDelivery.Controllers
 
 
 
-        public async Task<IActionResult> EditNeighborhhod(int? id)
+        public async Task<IActionResult> EditNeighborhood(int? id)
         {
             if (id == null)
             {
