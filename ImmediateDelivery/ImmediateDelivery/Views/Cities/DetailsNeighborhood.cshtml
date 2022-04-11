@@ -1,54 +1,53 @@
-﻿@model ImmediateDelivery.Data.Entities.City
+﻿@model ImmediateDelivery.Data.Entities.Neighborhood
 
 @{
     ViewData["Title"] = "Details";
 }
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 
 <h1>Detalles</h1>
 
 <div>
-     <partial name =  "_CityDetails"/>
+     <partial name = "_NeighborhoodDetails"/>
 </div>
 <div>
-    <a asp-action="AddNeighborhood" asp-route-id="@Model?.Id"class="btn btn-outline-primary">Agregar Barrio/Vereda</a> 
-    <a asp-action="Edit" asp-route-id="@Model?.Id"class="btn btn-outline-warning">Editar Ciudad</a> 
-    <a asp-action="Index"class="btn btn-outline-success">Regresar</a>
+    <a asp-action="AddAddress" asp-route-id="@Model?.Id"class="btn btn-outline-primary">Agregar Dirección</a> 
+    <a asp-action="EditNeighborhood" asp-route-id="@Model?.Id"class="btn btn-outline-warning">Editar Barrio/Vereda</a> 
+    <a asp-action="Details" asp-route-id="@Model?.City.Id" class="btn btn-outline-success">Regresar</a>
 </div>
-<hr/>
+
+<hr />
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Barrios/Veredas</h3>
+                <h3 class="panel-title">Direcciones</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
+
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Neighborhoods.FirstOrDefault().Name)
-                            </th>
-                             <th>
-                                @Html.DisplayNameFor(model => model.Neighborhoods.FirstOrDefault().AddressesNumber)
+                                @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Name)
                             </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Neighborhoods)
+                        @foreach (var item in Model.Addresses)
                         {
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
-                                   <td>
-                                    @Html.DisplayFor(modelItem => item.AddressesNumber)
-                                </td>
+
                                 <td>
-                                    <a asp-action="EditNeighborhood" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
-                                    <a asp-action="DetailsNeighborhood" asp-route-id="@item.Id" class="btn btn-outline-info">Detalles</a> 
-                                    <a asp-action="DeleteNeighborhood" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
+                                    <a asp-action="EditAddress" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a> 
+                                    <a asp-action="DetailsAddress" asp-route-id="@item.Id" class="btn btn-outline-info">Detalles</a> 
+                                    <a asp-action="DeleteAddress" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
                                 </td>
                             </tr>
                         }
@@ -79,3 +78,4 @@
     });
 </script>
 }
+

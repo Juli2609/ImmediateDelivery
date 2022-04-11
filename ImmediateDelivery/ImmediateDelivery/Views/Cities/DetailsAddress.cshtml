@@ -1,0 +1,41 @@
+﻿@model ImmediateDelivery.Data.Entities.Address
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+
+<h1>Detalles</h1>
+
+<div>
+     <partial name =  "_AddressDetails"/>
+</div>
+<div>
+    <a asp-action="EditAddress" asp-route-id="@Model?.Id"class="btn btn-outline-warning">Editar Dirección</a> 
+    <a asp-action="DetailsNeighborhood"asp-route-id="@Model?.Neighborhood.Id "class="btn btn-outline-success">Regresar</a>
+</div>
+<hr />
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#MyTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "aLengthMenu": [
+                [25, 50, 100, 200, -1],
+                [25, 50, 100, 200, "Todos"]
+            ]
+        });
+    });
+</script>
+}
+

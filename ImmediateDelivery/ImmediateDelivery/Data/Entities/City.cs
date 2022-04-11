@@ -12,5 +12,9 @@ namespace ImmediateDelivery.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public String Name { get; set; }
 
+        public ICollection<Neighborhood> Neighborhoods { get; set; }
+
+        [Display(Name = "Barrio/Vereda")]
+        public int NeighborhoodsNumber => Neighborhoods == null ? 0 : Neighborhoods.Count;
     }
 }
