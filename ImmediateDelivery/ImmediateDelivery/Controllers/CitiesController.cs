@@ -178,7 +178,7 @@ namespace ImmediateDelivery.Controllers
             return View(model);
 
         }
-
+         [HttpGet]
         public async Task<IActionResult> AddAddress(int? id)
         {
             if (id == null)
@@ -191,10 +191,12 @@ namespace ImmediateDelivery.Controllers
             {
                 return NotFound();
             }
+
             AddressViewModel model = new()
             {
                 NeighborhoodId = neighborhood.Id,
             };
+
             return View(model);
         }
 
@@ -219,8 +221,7 @@ namespace ImmediateDelivery.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una dirección" +
-                            " igual en este Barrio/Vereda.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una dirección igual en este Barrio/Vereda.");
                     }
                     else
                     {
@@ -232,11 +233,78 @@ namespace ImmediateDelivery.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(model);
 
+            return View(model);
         }
 
+        public async Task<IActionResult> EditAddress(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            Address address = await _context.Addresses
+                .Include(a => a.Neighborhood)
+               /// .ThenInclude(a => a.City)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            if (address == null)
+            {
+                return NotFound();
+            }
+
+            AddressViewModel model = new()
+            {
+                NeighborhoodId = address.Neighborhood.Id,
+                Id = address.Id,
+                Name = address.Name,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAddress(int id, AddressViewModel model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Address address = new()
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                    };
+                    _context.Update(address);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(DetailsNeighborhood), new { Id = model.NeighborhoodId });
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe una dirección  " +
+                            "igual en este Barrio/Vereda.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+
+            }
+            return View(model);
+        }
 
         public async Task<IActionResult> EditNeighborhood(int? id)
         {
@@ -391,6 +459,7 @@ namespace ImmediateDelivery.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new {Id = neighborhood.City.Id});
         }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -419,8 +488,43 @@ namespace ImmediateDelivery.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> DeleteAddress(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Address address = await _context.Addresses
+                .Include(a => a.Neighborhood)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            if (address == null)
+            {
+                return NotFound();
+            }
+
+            return View(address);
+        }
+
+
+        [HttpPost, ActionName("DeleteAddress")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAddressConfirmed(int id)
+        {
+            Address address = await _context.Addresses
+                .Include(a => a.Neighborhood)
+                .ThenInclude(n => n.City)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            _context.Addresses.Remove(address);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(DetailsNeighborhood), new {Id = address.Neighborhood.Id});
+        }
+    }
+
+    
     }
 
 
-}
+
 

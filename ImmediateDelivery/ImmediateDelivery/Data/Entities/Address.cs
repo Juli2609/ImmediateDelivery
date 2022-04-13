@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ImmediateDelivery.Data.Entities
 {
@@ -11,7 +12,8 @@ namespace ImmediateDelivery.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public String Name { get; set; }
 
-        public City City { get; set; }
+         public City City { get; set; }
+        [JsonIgnore]
         public Neighborhood Neighborhood { get; set; }
     }
 }

@@ -1,0 +1,18 @@
+﻿@model ImmediateDelivery.Data.Entities.Address
+
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Borrar</h1>
+
+<h3>¿Esta seeguro de querer borrar?</h3>
+<div>
+    <partial name="_AddressDetails"/>    
+    <form asp-action="DeleteAddress">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Borrar" class="btn btn-outline-danger" />
+        <a asp-action="DetailsNeighborhood" asp-route-id="@Model?.Neighborhood.Id" class="btn btn-outline-success">Regresar</a>
+    </form>
+</div>

@@ -1,19 +1,20 @@
 ﻿@model ImmediateDelivery.Models.AddressViewModel
 
+
 @{
     ViewData["Title"] = "Create";
 }
 
 <h1>Crear</h1>
 
-<h4>Barrio/Vereda</h4>
+<h4>Dirección</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="AddAddress">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type ="hidden" asp-for="NeighborhoodId"/>
-            <partial name="_Neighborhood"/>
+            <partial name="_Address"/>
             
             <div class="form-group mt-2">
                 <input type="submit" value="Crear" class="btn btn-outline-primary" />
