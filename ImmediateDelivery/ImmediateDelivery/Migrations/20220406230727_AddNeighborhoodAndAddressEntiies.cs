@@ -40,7 +40,7 @@ namespace ImmediateDelivery.Migrations
                 },
                 constraints: table =>
                 {
-                    /*  table.PrimaryKey("PK_Addresses", x => x.Id);
+                     /* table.PrimaryKey("PK_Addresses", x => x.Id);
                       table.ForeignKey(
                           name: "FK_Addresses_Cities_CityId",
                           column: x => x.CityId,
@@ -56,10 +56,10 @@ namespace ImmediateDelivery.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
+           /* migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CityId",
                 table: "Addresses",
-                column: "CityId");
+                column: "CityId");*/
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_Name_NeighborhoodId",

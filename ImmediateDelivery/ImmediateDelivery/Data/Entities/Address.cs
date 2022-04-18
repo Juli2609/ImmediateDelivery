@@ -15,5 +15,7 @@ namespace ImmediateDelivery.Data.Entities
          public City City { get; set; }
         [JsonIgnore]
         public Neighborhood Neighborhood { get; set; }
+
+        public ICollection<User> Users { get; set; }    
     }
 }
