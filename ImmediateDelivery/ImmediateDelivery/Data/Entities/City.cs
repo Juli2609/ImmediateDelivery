@@ -16,5 +16,6 @@ namespace ImmediateDelivery.Data.Entities
 
         [Display(Name = "Barrio/Vereda")]
         public int NeighborhoodsNumber => Neighborhoods == null ? 0 : Neighborhoods.Count;
+        public ICollection<User> Users { get; set; }
     }
 }

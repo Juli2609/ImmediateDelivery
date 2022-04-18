@@ -16,6 +16,6 @@ namespace ImmediateDelivery.Data.Entities
         [JsonIgnore]
         public Neighborhood Neighborhood { get; set; }
 
-        public ICollection<User> Users { get; set; }    
+        
     }
 }
