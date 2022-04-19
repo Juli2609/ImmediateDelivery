@@ -19,19 +19,20 @@ namespace ImmediateDelivery.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckCitiesAsync();
-            await CheckRolesSAsync();
+            await CheckRolesAsync();
             await CheckUserAsync("1010", "Juliana", "Arroyave", "Juli@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.Admin);
+            await CheckUserAsync("2020", "Mariana", "Raigosa", "Mari@yopmail.com", "311 322 2046", "Calle Sol Calle Luna", UserType.User);
 
         }
 
         private async Task<User> CheckUserAsync(
-        string document,
-        string firstName,
-        string lastName,
-        string email,
-        string phone,
-        string address,
-        UserType userType)
+            string document,
+            string firstName,
+            string lastName,
+            string email,
+            string phone,
+            string address,
+            UserType userType)
         {
             User user = await _userHelper.GetUserAsync(email);
             if (user == null)
@@ -56,12 +57,10 @@ namespace ImmediateDelivery.Data
             return user;
         }
 
-
-        private async Task CheckRolesSAsync()
+        private async Task CheckRolesAsync()
         {
             await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
             await _userHelper.CheckRoleAsync(UserType.User.ToString());
-
         }
 
         private async Task CheckCitiesAsync()

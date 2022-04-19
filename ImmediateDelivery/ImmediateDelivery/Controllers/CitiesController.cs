@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using ImmediateDelivery.Data;
 using ImmediateDelivery.Data.Entities;
 using ImmediateDelivery.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ImmediateDelivery.Controllers
 {
+   [Authorize(Roles = "Admin")]
     public class CitiesController : Controller
     {
         private readonly DataContext _context;
@@ -82,7 +84,7 @@ namespace ImmediateDelivery.Controllers
 
             return View(address);
         }
-
+        
         public IActionResult Create()
         {
             City city = new() { Neighborhoods = new List<Neighborhood>() };
@@ -373,7 +375,6 @@ namespace ImmediateDelivery.Controllers
             }
             return View(model);
         }
-
 
         public async Task<IActionResult> Edit(int? id)
         {
