@@ -58,9 +58,9 @@ namespace ImmediateDelivery.Helpers
             await _userManager.AddToRoleAsync(user, roleName);
         }
 
-        public Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
         public async Task CheckRoleAsync(string roleName)
