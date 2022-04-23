@@ -25,8 +25,8 @@ namespace ImmediateDelivery.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cities
-                .Include(c => c.Neighborhoods)
+            return View(await _context.States
+                .Include(s => s.Cities)
                 .ToListAsync());
         }
 
@@ -37,16 +37,16 @@ namespace ImmediateDelivery.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities
-                .Include(c => c.Neighborhoods)
-                .ThenInclude(n => n.Addresses)   
+            State state = await _context.States
+                .Include(s => s.Cities)
+                .ThenInclude(c => c.Neighborhoods)   
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (city == null)
+            if (state == null)
             {
                 return NotFound();
             }
 
-            return View(city);
+            return View(state);
         }
         public async Task<IActionResult> DetailsNeighborhood(int? id)
         {
@@ -57,7 +57,6 @@ namespace ImmediateDelivery.Controllers
 
             Neighborhood neighborhood = await _context.Neighborhoods
                 .Include(n => n.City)
-                .Include(n => n.Addresses)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (neighborhood == null)
             {
@@ -67,39 +66,40 @@ namespace ImmediateDelivery.Controllers
             return View(neighborhood);
         }
 
-        public async Task<IActionResult> DetailsAddress(int? id)
+        public async Task<IActionResult> DetailsCity(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Address address = await _context.Addresses
-                .Include(s => s.Neighborhood)
+            City city = await _context.Cities
+                .Include(c => c.State)
+                .Include(s => s.Neighborhoods)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (address == null)
+            if (city == null)
             {
                 return NotFound();
             }
 
-            return View(address);
+            return View(city);
         }
         
         public IActionResult Create()
         {
-            City city = new() { Neighborhoods = new List<Neighborhood>() };
+            State state = new() { Cities = new List<City>() };
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(City city)
+        public async Task<IActionResult> Create(State state)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(city);
+                    _context.Add(state);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -107,7 +107,7 @@ namespace ImmediateDelivery.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una ciudad con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un departamento con el mismo nombre.");
                     }
                     else
                     {
@@ -119,7 +119,7 @@ namespace ImmediateDelivery.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(city);
+            return View(state);
 
         }
 
@@ -152,13 +152,12 @@ namespace ImmediateDelivery.Controllers
                 {
                     Neighborhood neighborhood = new()
                     {
-                        Addresses = new List<Address>(),
                         City = await _context.Cities.FindAsync(model.CityId),
                         Name = model.Name, 
                     };
                     _context.Add(neighborhood);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), new { Id = model.CityId });
+                    return RedirectToAction(nameof(DetailsCity), new { Id = model.CityId });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -181,22 +180,22 @@ namespace ImmediateDelivery.Controllers
 
         }
          [HttpGet]
-        public async Task<IActionResult> AddAddress(int? id)
+        public async Task<IActionResult> AddCity(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Neighborhood neighborhood = await _context.Neighborhoods.FindAsync(id);
-            if (neighborhood == null)
+            State state = await _context.States.FindAsync(id);
+            if (state == null)
             {
                 return NotFound();
             }
 
-            AddressViewModel model = new()
+            CityViewModel model = new()
             {
-                NeighborhoodId = neighborhood.Id,
+                StateId = state.Id,
             };
 
             return View(model);
@@ -204,26 +203,29 @@ namespace ImmediateDelivery.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddAddress(AddressViewModel model)
+        public async Task<IActionResult> AddCity(CityViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    Address address = new()
+                    City city = new()
                     {
-                        Neighborhood = await _context.Neighborhoods.FindAsync(model.NeighborhoodId),
+                        Neighborhoods = new List<Neighborhood>(),
+                        State = await _context.States.FindAsync(model.StateId),
                         Name = model.Name,
+
                     };
-                    _context.Add(address);
+                    _context.Add(city);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(DetailsNeighborhood), new { Id = model.NeighborhoodId });
+                    return RedirectToAction(nameof(DetailsNeighborhood), new { Id = model.StateId });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una dirección igual en este Barrio/Vereda.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una Ciudad con" +
+                            " el mismo nombre en este Departamento.");
                     }
                     else
                     {
@@ -239,27 +241,27 @@ namespace ImmediateDelivery.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> EditAddress(int? id)
+        public async Task<IActionResult> EditCity(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Address address = await _context.Addresses
-                .Include(a => a.Neighborhood)
+            City city = await _context.Cities
+                .Include(c => c.State)
                /// .ThenInclude(a => a.City)
                 .FirstOrDefaultAsync(a => a.Id == id);
-            if (address == null)
+            if (city == null)
             {
                 return NotFound();
             }
 
-            AddressViewModel model = new()
+            CityViewModel model = new()
             {
-                NeighborhoodId = address.Neighborhood.Id,
-                Id = address.Id,
-                Name = address.Name,
+                StateId = city.State.Id,
+                Id = city.Id,
+                Name = city.Name,
             };
 
             return View(model);
@@ -267,7 +269,7 @@ namespace ImmediateDelivery.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAddress(int id, AddressViewModel model)
+        public async Task<IActionResult> EditCity(int id, CityViewModel model)
         {
             if (id != model.Id)
             {
@@ -278,21 +280,21 @@ namespace ImmediateDelivery.Controllers
             {
                 try
                 {
-                    Address address = new()
+                    City city = new()
                     {
                         Id = model.Id,
                         Name = model.Name,
                     };
-                    _context.Update(address);
+                    _context.Update(city);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(DetailsNeighborhood), new { Id = model.NeighborhoodId });
+                    return RedirectToAction(nameof(Details), new { Id = model.StateId });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una dirección  " +
-                            "igual en este Barrio/Vereda.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una Ciudad con" +
+                            " el mismo nombre en este Departamento.");
                     }
                     else
                     {
@@ -353,7 +355,7 @@ namespace ImmediateDelivery.Controllers
                     };
                     _context.Update(neighborhood);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), new { Id = model.CityId });
+                    return RedirectToAction(nameof(DetailsCity), new { Id = model.CityId });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -383,21 +385,21 @@ namespace ImmediateDelivery.Controllers
                 return NotFound();
             }
 
-            City city = await _context.Cities
-                .Include(c => c.Neighborhoods)
+            State state = await _context.States
+                .Include(s => s.Cities)
                 .FirstOrDefaultAsync(c => c.Id == id);
-            if (city == null)
+            if (state == null)
             {
                 return NotFound();
             }
-            return View(city);
+            return View(state);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, City city)
+        public async Task<IActionResult> Edit(int id, State state)
         {
-            if (id != city.Id)
+            if (id != state.Id)
             {
                 return NotFound();
             }
@@ -406,7 +408,7 @@ namespace ImmediateDelivery.Controllers
             {
                 try
                 {
-                    _context.Update(city);
+                    _context.Update(state);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -414,7 +416,7 @@ namespace ImmediateDelivery.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una ciudad con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un Departamento con el mismo nombre.");
                     }
                     else
                     {
@@ -427,7 +429,7 @@ namespace ImmediateDelivery.Controllers
                 }
 
             }
-            return View(city);
+            return View(state);
         }
 
         public async Task<IActionResult> DeleteNeighborhood(int? id)
@@ -455,10 +457,11 @@ namespace ImmediateDelivery.Controllers
         {
             Neighborhood neighborhood = await _context.Neighborhoods
                 .Include(n => n.City)
+                .ThenInclude(c => c.State)
                 .FirstOrDefaultAsync(n => n.Id == id);
             _context.Neighborhoods.Remove(neighborhood);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details), new {Id = neighborhood.City.Id});
+            return RedirectToAction(nameof(DetailsCity), new {Id = neighborhood.City.Id});
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -468,9 +471,38 @@ namespace ImmediateDelivery.Controllers
                 return NotFound();
             }
 
-            City city = await _context.Cities
-                .Include(c => c.Neighborhoods)
+            State state = await _context.States
+                .Include(c => c.Cities)
                 .FirstOrDefaultAsync(c => c.Id == id);
+            if (state == null)
+            {
+                return NotFound();
+            }
+
+            return View(state);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            State state = await _context.States.FindAsync(id);
+            _context.States.Remove(state);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteCity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            City city = await _context.Cities
+                .Include(c => c.State)
+                .FirstOrDefaultAsync(a => a.Id == id);
             if (city == null)
             {
                 return NotFound();
@@ -480,46 +512,16 @@ namespace ImmediateDelivery.Controllers
         }
 
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteCity")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteCityConfirmed(int id)
         {
-            var city = await _context.Cities.FindAsync(id);
+            City city = await _context.Cities
+                .Include(a => a.State)
+                .FirstOrDefaultAsync(a => a.Id == id);
             _context.Cities.Remove(city);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> DeleteAddress(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Address address = await _context.Addresses
-                .Include(a => a.Neighborhood)
-                .FirstOrDefaultAsync(a => a.Id == id);
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            return View(address);
-        }
-
-
-        [HttpPost, ActionName("DeleteAddress")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAddressConfirmed(int id)
-        {
-            Address address = await _context.Addresses
-                .Include(a => a.Neighborhood)
-                .ThenInclude(n => n.City)
-                .FirstOrDefaultAsync(a => a.Id == id);
-            _context.Addresses.Remove(address);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(DetailsNeighborhood), new {Id = address.Neighborhood.Id});
+            return RedirectToAction(nameof(Details), new {Id = city.State.Id});
         }
     }
 

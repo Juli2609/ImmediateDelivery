@@ -1,4 +1,4 @@
-﻿@model ImmediateDelivery.Data.Entities.Address
+﻿@model ImmediateDelivery.Data.Entities.Neighborhood
 
 @{
     ViewData["Title"] = "Details";
@@ -9,12 +9,13 @@
 <h1>Detalles</h1>
 
 <div>
-     <partial name =  "_AddressDetails"/>
+     <partial name = "_NeighborhoodDetails"/>
 </div>
 <div>
-    <a asp-action="EditAddress" asp-route-id="@Model?.Id"class="btn btn-outline-warning">Editar Dirección</a> 
-    <a asp-action="DetailsNeighborhood"asp-route-id="@Model?.Neighborhood.Id "class="btn btn-outline-success">Regresar</a>
+    <a asp-action="EditNeighborhood" asp-route-id="@Model?.Id"class="btn btn-outline-warning">Editar Barrio/Vereda</a> 
+    <a asp-action="DetailsCity" asp-route-id="@Model?.City.Id" class="btn btn-outline-success">Regresar</a>
 </div>
+
 <hr />
 
 

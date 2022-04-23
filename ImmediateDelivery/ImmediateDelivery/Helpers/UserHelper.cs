@@ -13,7 +13,7 @@ namespace ImmediateDelivery.Helpers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
 
-        public UserHelper(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
+        public UserHelper(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
             SignInManager<User> signInManager)
         {
             _context = context;
@@ -24,6 +24,33 @@ namespace ImmediateDelivery.Helpers
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
+        }
+
+        public async Task<User> AddUserAsync(AddUserViewModel model)
+        {
+            User user = new()
+            {
+                Address = model.Address,
+                Document = model.Document,
+                Email = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                ImageId = model.ImageId,
+                PhoneNumber = model.PhoneNumber,
+                Neighborhood = await _context.Neighborhoods.FindAsync(model.NeighborhoodId),
+                UserName = model.Username,
+                UserType = model.UserType
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            if (result != IdentityResult.Success)
+            {
+                return null;
+            }
+
+            User newUser = await GetUserAsync(model.Username);
+            await AddUserToRoleAsync(newUser, user.UserType.ToString());
+            return newUser;
         }
 
         public async Task AddUserToRoleAsync(User user, string roleName)
@@ -52,20 +79,19 @@ namespace ImmediateDelivery.Helpers
         public async Task<User> GetUserAsync(string email)
         {
             return await _context.Users
-           .Include(u => u.City)
-           .ThenInclude(c => c.Neighborhoods)
-           .ThenInclude(n => n.Addresses)
-           .FirstOrDefaultAsync(u => u.Email == email);
-
+               .Include(u => u.Neighborhood) 
+               .ThenInclude(n => n.City)
+               .ThenInclude(c => c.State)
+               .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<User> GetUserAsync(Guid userId)
         {
             return await _context.Users
-           .Include(u => u.City)
-           .ThenInclude(c => c.Neighborhoods)
-           .ThenInclude(n => n.Addresses)
-           .FirstOrDefaultAsync(u => u.Id == userId.ToString());
+                  .Include(u => u.Neighborhood)
+                  .ThenInclude(n => n.City)
+                  .ThenInclude(c => c.State)
+                  .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
 
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
@@ -80,7 +106,7 @@ namespace ImmediateDelivery.Helpers
 
         public async Task LogoutAsync()
         {
-            await _signInManager.SignOutAsync();    
+            await _signInManager.SignOutAsync();
         }
 
         public async Task<IdentityResult> UpdateUserAsync(User user)

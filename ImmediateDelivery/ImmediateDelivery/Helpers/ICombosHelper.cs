@@ -4,11 +4,11 @@ namespace ImmediateDelivery.Helpers
 {
     public interface ICombosHelper
     {
-        Task<IEnumerable<SelectListItem>> GetComboCitiesAsync();
+        Task<IEnumerable<SelectListItem>> GetComboStatesAsync();
+        Task<IEnumerable<SelectListItem>> GetComboCitiesAsync(int StateId);
+        Task<IEnumerable<SelectListItem>> GetComboNeighborhoodsAsync(int cityId);
 
-        Task<IEnumerable<SelectListItem>> GetComboNeighborhodsAsync(int countryId);
-
-        Task<IEnumerable<SelectListItem>> GetComboAddressesAsync(int stateId);
+        
 
     }
 }

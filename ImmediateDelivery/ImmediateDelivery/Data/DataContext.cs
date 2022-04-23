@@ -12,13 +12,13 @@ namespace ImmediateDelivery.Data
         }
         public DbSet<City> Cities { get; set; }
         public DbSet<Neighborhood> Neighborhoods { get; set; }
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<State> States  { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<City>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<Neighborhood>().HasIndex("Name","CityId").IsUnique();
-            modelBuilder.Entity<Address>().HasIndex("Name","NeighborhoodId").IsUnique();
+            modelBuilder.Entity<State>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<City>().HasIndex("Name","StateId").IsUnique();
+            modelBuilder.Entity<Neighborhood>().HasIndex("Name", "CityId").IsUnique();
         }
         }
 }

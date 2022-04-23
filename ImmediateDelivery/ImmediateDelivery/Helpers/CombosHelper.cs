@@ -12,10 +12,25 @@ namespace ImmediateDelivery.Helpers
         {
             _context = context;
         }
-        public async Task<IEnumerable<SelectListItem>> GetComboAddressesAsync(int neighborhoodId)
+        
+        public async Task<IEnumerable<SelectListItem>> GetComboStatesAsync()
         {
-            List<SelectListItem> list = await _context.Addresses
-                .Where(s => s.Neighborhood.Id == neighborhoodId)
+            List<SelectListItem> list = await _context.States.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+            })
+              .OrderBy(c => c.Text)
+              .ToListAsync();
+
+            list.Insert(0, new SelectListItem { Text = "[Seleccione un Departamento...", Value = "0" });
+            return list;
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetComboCitiesAsync(int stateId)
+        {
+            List<SelectListItem> list = await _context.Cities
+                .Where(s => s.State.Id == stateId)
                 .Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -24,25 +39,11 @@ namespace ImmediateDelivery.Helpers
                 .OrderBy(c => c.Text)
                 .ToListAsync();
 
-            list.Insert(0, new SelectListItem { Text = "[Seleccione una dirección...", Value = "0" });
-            return list;
-        }
-
-        public async Task<IEnumerable<SelectListItem>> GetComboCitiesAsync()
-        {
-            List<SelectListItem> list = await _context.Cities.Select(c => new SelectListItem
-            {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            })
-              .OrderBy(c => c.Text)
-              .ToListAsync();
-
             list.Insert(0, new SelectListItem { Text = "[Seleccione una ciudad...", Value = "0" });
             return list;
-        }
 
-        public async Task<IEnumerable<SelectListItem>> GetComboNeighborhodsAsync(int cityId)
+        }
+        public async Task<IEnumerable<SelectListItem>> GetComboNeighborhoodsAsync(int cityId)
         {
             List<SelectListItem> list = await _context.Neighborhoods
                 .Where(s => s.City.Id == cityId)

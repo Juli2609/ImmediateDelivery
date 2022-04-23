@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImmediateDelivery.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220418020711_AddUserEntities")]
-    partial class AddUserEntities
+    [Migration("20220423012717_AddAllMigrations")]
+    partial class AddAllMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,37 +23,6 @@ namespace ImmediateDelivery.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<int>("NeighborhoodId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("NeighborhoodId");
-
-                    b.HasIndex("Name", "NeighborhoodId")
-                        .IsUnique();
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.City", b =>
                 {
@@ -68,9 +37,14 @@ namespace ImmediateDelivery.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("StateId");
+
+                    b.HasIndex("Name", "StateId")
                         .IsUnique();
 
                     b.ToTable("Cities");
@@ -102,6 +76,27 @@ namespace ImmediateDelivery.Migrations
                     b.ToTable("Neighborhoods");
                 });
 
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.State", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("States");
+                });
+
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -114,12 +109,6 @@ namespace ImmediateDelivery.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -156,6 +145,9 @@ namespace ImmediateDelivery.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int>("NeighborhoodId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -188,9 +180,7 @@ namespace ImmediateDelivery.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("CityId");
+                    b.HasIndex("NeighborhoodId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -336,23 +326,15 @@ namespace ImmediateDelivery.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Address", b =>
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.City", b =>
                 {
-                    b.HasOne("ImmediateDelivery.Data.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
+                    b.HasOne("ImmediateDelivery.Data.Entities.State", "State")
+                        .WithMany("Cities")
+                        .HasForeignKey("StateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ImmediateDelivery.Data.Entities.Neighborhood", "Neighborhood")
-                        .WithMany("Addresses")
-                        .HasForeignKey("NeighborhoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
-
-                    b.Navigation("Neighborhood");
+                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.Neighborhood", b =>
@@ -368,17 +350,13 @@ namespace ImmediateDelivery.Migrations
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.User", b =>
                 {
-                    b.HasOne("ImmediateDelivery.Data.Entities.Address", null)
+                    b.HasOne("ImmediateDelivery.Data.Entities.Neighborhood", "Neighborhood")
                         .WithMany("Users")
-                        .HasForeignKey("AddressId");
-
-                    b.HasOne("ImmediateDelivery.Data.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
+                        .HasForeignKey("NeighborhoodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("City");
+                    b.Navigation("Neighborhood");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -432,11 +410,6 @@ namespace ImmediateDelivery.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Address", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.City", b =>
                 {
                     b.Navigation("Neighborhoods");
@@ -444,7 +417,12 @@ namespace ImmediateDelivery.Migrations
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.Neighborhood", b =>
                 {
-                    b.Navigation("Addresses");
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.State", b =>
+                {
+                    b.Navigation("Cities");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,16 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ImmediateDelivery.Models
 {
-    public class AddressViewModel
+    public class CityViewModel
     {
         public int Id { get; set; }
 
-        [Display(Name = "Dirección")]
+        [Display(Name = "Ciudad")]
         [MaxLength(80, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public String Name { get; set; }
-
-        public int NeighborhoodId { get; set; }
+        public int StateId { get; set; }
 
 
     }

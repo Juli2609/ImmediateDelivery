@@ -46,7 +46,7 @@ namespace ImmediateDelivery.Data
                     PhoneNumber = phone,
                     Address = address,
                     Document = document,
-                    City = _context.Cities.FirstOrDefault(),
+                    Neighborhood = _context.Neighborhoods.FirstOrDefault(),
                     UserType = userType,
                 };
 
@@ -65,36 +65,40 @@ namespace ImmediateDelivery.Data
 
         private async Task CheckCitiesAsync()
         {
-            if (!_context.Cities.Any())
+            if (!_context.States.Any())
             {
-                _context.Cities.Add(new City
+                _context.States.Add(new State
                 {
-                    Name = "Bello",
+                    Name = "Antioquia",
 
-                    Neighborhoods = new List<Neighborhood>()
-                      {
-                          new Neighborhood()
-                          {
-                              Name = "Camacol"
-                          },
-                          new Neighborhood() {Name = "Mirador"},
-                          new Neighborhood() {Name = "Trapiche"},
-                          new Neighborhood() {Name = "La cumbre"},
-                          new Neighborhood() {Name = "Quitasol"},
-                          new Neighborhood() {Name = "Niquia"}
-                      }
+                    Cities = new List<City>()
+                    {
+                        new City()
+                        {
+                         Name = "Bello",
 
+                           Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood(){Name = "Camacol"},
+                              new Neighborhood() {Name = "Mirador"},
+                              new Neighborhood() {Name = "Trapiche"},
+                              new Neighborhood() {Name = "La cumbre"},
+                              new Neighborhood() {Name = "Quitasol"},
+                              new Neighborhood() {Name = "Niquia"}
+                           }
+
+                        },
+                        new City() { Name = "Envigado" },
+                        new City() { Name = "Medellín" },
+                        new City() { Name = "Barbosa" },
+                        new City() { Name = "ItagÜí" },
+                        new City() { Name = "Caldas" },
+                        new City() { Name = "Girardota" },
+                        new City() { Name = "Copacabana" },
+                        new City() { Name = "Sabaneta" },
+                        new City() { Name = "La Estrella" }
+                    }
                 });
-                _context.Cities.Add(new City { Name = "Envigado" });
-                _context.Cities.Add(new City { Name = "Medellín" });
-                _context.Cities.Add(new City { Name = "Barbosa" });
-                _context.Cities.Add(new City { Name = "ItagÜí" });
-                _context.Cities.Add(new City { Name = "Caldas" });
-                _context.Cities.Add(new City { Name = "Girardota" });
-                _context.Cities.Add(new City { Name = "Copacabana" });
-                _context.Cities.Add(new City { Name = "Sabaneta" });
-                _context.Cities.Add(new City { Name = "La Estrella" });
-
             }
             await _context.SaveChangesAsync();
         }

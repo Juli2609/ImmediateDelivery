@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ImmediateDelivery.Data.Entities
 {
@@ -12,10 +13,13 @@ namespace ImmediateDelivery.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public String Name { get; set; }
 
+        [JsonIgnore]
+        public State State { get; set; }
         public ICollection<Neighborhood> Neighborhoods { get; set; }
 
         [Display(Name = "Barrio/Vereda")]
         public int NeighborhoodsNumber => Neighborhoods == null ? 0 : Neighborhoods.Count;
-        public ICollection<User> Users { get; set; }
+
+       
     }
 }
