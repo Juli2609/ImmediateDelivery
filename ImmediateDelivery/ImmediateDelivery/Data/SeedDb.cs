@@ -18,7 +18,7 @@ namespace ImmediateDelivery.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
-            await CheckCitiesAsync();
+            await CheckStatesAsync();
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Juliana", "Arroyave", "Juli@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.Admin);
             await CheckUserAsync("2020", "Mariana", "Raigosa", "Mari@yopmail.com", "311 322 2046", "Calle Sol Calle Luna", UserType.User);
@@ -52,6 +52,10 @@ namespace ImmediateDelivery.Data
 
                 await _userHelper.AddUserAsync(user, "123456");
                 await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+
+                string token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+
             }
 
             return user;
@@ -63,7 +67,7 @@ namespace ImmediateDelivery.Data
             await _userHelper.CheckRoleAsync(UserType.User.ToString());
         }
 
-        private async Task CheckCitiesAsync()
+        private async Task CheckStatesAsync()
         {
             if (!_context.States.Any())
             {

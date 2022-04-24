@@ -14,11 +14,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace ImmediateDelivery.Controllers
 {
    [Authorize(Roles = "Admin")]
-    public class CitiesController : Controller
+    public class StatesController : Controller
     {
         private readonly DataContext _context;
 
-        public CitiesController(DataContext context)
+        public StatesController(DataContext context)
         {
             _context = context;
         }
