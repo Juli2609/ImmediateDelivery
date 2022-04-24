@@ -77,32 +77,139 @@ namespace ImmediateDelivery.Data
 
                     Cities = new List<City>()
                     {
-                        new City()
+                         new City()
                         {
                          Name = "Bello",
 
                            Neighborhoods = new List<Neighborhood>()
                            {
-                              new Neighborhood(){Name = "Camacol"},
+                              new Neighborhood() {Name = "Camacol"},
                               new Neighborhood() {Name = "Mirador"},
                               new Neighborhood() {Name = "Trapiche"},
-                              new Neighborhood() {Name = "La cumbre"},
                               new Neighborhood() {Name = "Quitasol"},
                               new Neighborhood() {Name = "Niquia"}
                            }
 
                         },
-                        new City() { Name = "Envigado" },
-                        new City() { Name = "Medellín" },
-                        new City() { Name = "Barbosa" },
-                        new City() { Name = "ItagÜí" },
-                        new City() { Name = "Caldas" },
-                        new City() { Name = "Girardota" },
-                        new City() { Name = "Copacabana" },
-                        new City() { Name = "Sabaneta" },
-                        new City() { Name = "La Estrella" }
+                        new City()
+                        {
+                            Name = "Envigado",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "San Lucas"},
+                              new Neighborhood() {Name = "Zuñiga"},
+                              new Neighborhood() {Name = "Las Antillas"},
+                              new Neighborhood() {Name = "La Paz"},
+                              new Neighborhood() {Name = "El Salado"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "Medellín",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "Castilla"},
+                              new Neighborhood() {Name = "Adalucia"},
+                              new Neighborhood() {Name = "Poblado"},
+                              new Neighborhood() {Name = "Laureles"},
+                              new Neighborhood() {Name = "Aranjuez"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "Barbosa",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "Altamira"},
+                              new Neighborhood() {Name = "Isaza"},
+                              new Neighborhood() {Name = "El Viento"},
+                              new Neighborhood() {Name = "El Tigre"},
+                              new Neighborhood() {Name = "La cejita"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "ItagÜí",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "La Maria"},
+                              new Neighborhood() {Name = "Los Olivares"},
+                              new Neighborhood() {Name = "El Progreso"},
+                              new Neighborhood() {Name = "Ditaires"},
+                              new Neighborhood() {Name = "El Ajizal"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "Caldas",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "La Pradera"},
+                              new Neighborhood() {Name = "Olaya Herrera"},
+                              new Neighborhood() {Name = "Cristo Rey"},
+                              new Neighborhood() {Name = "Los Cerezos"},
+                              new Neighborhood() {Name = "La Docena"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "Girardota",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "El Llano"},
+                              new Neighborhood() {Name = "Monte Carlo"},
+                              new Neighborhood() {Name = "San Jose"},
+                              new Neighborhood() {Name = "Guyacanes"},
+                              new Neighborhood() {Name = "El Naranjal"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "Copacabana",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "Machado"},
+                              new Neighborhood() {Name = "El Pedregal"},
+                              new Neighborhood() {Name = "La Misericordia"},
+                              new Neighborhood() {Name = "La Azulita"},
+                              new Neighborhood() {Name = "Villa Nueva"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "Sabaneta",
+
+                            Neighborhoods = new List<Neighborhood>()
+                           {
+                              new Neighborhood() {Name = "Las Lomitas"},
+                              new Neighborhood() {Name = "La Doctora"},
+                              new Neighborhood() {Name = "Las Casitas"},
+                              new Neighborhood() {Name = "Tres Esquinas"},
+                              new Neighborhood() {Name = "Los Arias"},
+                           }
+                        },
+                        new City()
+                        {
+                            Name = "La Estrella",
+
+                            Neighborhoods = new List<Neighborhood>()
+                            {
+                              new Neighborhood() {Name = "El Dorado"},
+                              new Neighborhood() {Name = "Monterrey"},
+                              new Neighborhood() {Name = "Las Brisas"},
+                              new Neighborhood() {Name = "Escobar"},
+                              new Neighborhood() {Name = "Horizontes"},
+                            }
+                        }
                     }
-                });
+               });
             }
             await _context.SaveChangesAsync();
         }
