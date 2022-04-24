@@ -42,7 +42,7 @@ namespace ImmediateDelivery.Models
             : $"https://shoppingprep.blob.core.windows.net/users/{ImageId}";
 
         [Display(Name = "Image")]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
         [Display(Name = "Despartamento")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un Departamento.")]
