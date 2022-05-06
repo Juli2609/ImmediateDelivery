@@ -12,9 +12,10 @@
      <partial name =  "_CityDetails"/>
 </div>
 <div>
-    <a asp-action="AddNeighborhood" asp-route-id="@Model?.Id"class="btn btn-outline-primary">Agregar Barrio/Vereda</a> 
-    <a asp-action="EditCity" asp-route-id="@Model?.Id"class="btn btn-outline-warning">Editar Ciudad</a> 
-    <a asp-action="Details"asp-route-id="@Model?.State.Id "class="btn btn-outline-success">Regresar</a>
+    <a asp-action="AddNeighborhood" asp-route-id="@Model?.Id"class="btn btn-outline-primary"><i class="fa-solid fa-file-circle-plus"></i> Barrio/Vereda</a> 
+    <a asp-action="EditCity" asp-route-id="@Model?.Id"class="btn btn-outline-warning"><i class="fa-solid fa-pen-to-square"></i> Ciudad</a> 
+    <a asp-action="Details"asp-route-id="@Model?.State.Id "class="btn btn-outline-success"><i class="fa-solid fa-circle-arrow-left"></i></a>
+       
 </div>
 <hr/>
 <div class="row">
