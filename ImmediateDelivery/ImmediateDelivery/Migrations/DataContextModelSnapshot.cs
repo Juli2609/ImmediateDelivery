@@ -35,7 +35,7 @@ namespace ImmediateDelivery.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("StateId")
+                    b.Property<int?>("StateId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -43,7 +43,8 @@ namespace ImmediateDelivery.Migrations
                     b.HasIndex("StateId");
 
                     b.HasIndex("Name", "StateId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[StateId] IS NOT NULL");
 
                     b.ToTable("Cities");
                 });
@@ -56,7 +57,7 @@ namespace ImmediateDelivery.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -69,9 +70,50 @@ namespace ImmediateDelivery.Migrations
                     b.HasIndex("CityId");
 
                     b.HasIndex("Name", "CityId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CityId] IS NOT NULL");
 
                     b.ToTable("Neighborhoods");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Package", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Contain")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("Delicate")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Long")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Widt")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WrapperType")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Package");
                 });
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.State", b =>
@@ -143,7 +185,7 @@ namespace ImmediateDelivery.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("NeighborhoodId")
+                    b.Property<int?>("NeighborhoodId")
                         .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
@@ -328,9 +370,7 @@ namespace ImmediateDelivery.Migrations
                 {
                     b.HasOne("ImmediateDelivery.Data.Entities.State", "State")
                         .WithMany("Cities")
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StateId");
 
                     b.Navigation("State");
                 });
@@ -339,20 +379,25 @@ namespace ImmediateDelivery.Migrations
                 {
                     b.HasOne("ImmediateDelivery.Data.Entities.City", "City")
                         .WithMany("Neighborhoods")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CityId");
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Package", b =>
+                {
+                    b.HasOne("ImmediateDelivery.Data.Entities.User", "User")
+                        .WithMany("Packages")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.User", b =>
                 {
                     b.HasOne("ImmediateDelivery.Data.Entities.Neighborhood", "Neighborhood")
                         .WithMany("Users")
-                        .HasForeignKey("NeighborhoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("NeighborhoodId");
 
                     b.Navigation("Neighborhood");
                 });
@@ -421,6 +466,11 @@ namespace ImmediateDelivery.Migrations
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.State", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.User", b =>
+                {
+                    b.Navigation("Packages");
                 });
 #pragma warning restore 612, 618
         }

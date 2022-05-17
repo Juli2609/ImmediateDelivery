@@ -19,7 +19,7 @@ namespace ImmediateDelivery.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IMailHelper _mailHelper;
 
-        public UsersController(DataContext context, IUserHelper userHelper, IBlobHelper blobHelper, 
+        public UsersController(DataContext context, IUserHelper userHelper, IBlobHelper blobHelper,
             ICombosHelper combosHelper, IMailHelper mailHelper)
         {
             _context = context;
@@ -37,6 +37,7 @@ namespace ImmediateDelivery.Controllers
                 .ThenInclude(c => c.State)
                 .ToListAsync());
         }
+
 
         public async Task<IActionResult> Create()
         {
@@ -104,6 +105,7 @@ namespace ImmediateDelivery.Controllers
             model.States = await _combosHelper.GetComboStatesAsync();
             return View(model);
         }
+
         public JsonResult GetCities(int stateId)
         {
             State state = _context.States
@@ -131,4 +133,3 @@ namespace ImmediateDelivery.Controllers
         }
     }
 }
-

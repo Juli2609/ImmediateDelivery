@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ImmediateDelivery.Migrations
 {
-    public partial class AddAllMigrations : Migration
+    public partial class addallmigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,7 +64,7 @@ namespace ImmediateDelivery.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    StateId = table.Column<int>(type: "int", nullable: false)
+                    StateId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,8 +73,7 @@ namespace ImmediateDelivery.Migrations
                         name: "FK_Cities_States_StateId",
                         column: x => x.StateId,
                         principalTable: "States",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -84,7 +83,7 @@ namespace ImmediateDelivery.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: false)
+                    CityId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -93,8 +92,7 @@ namespace ImmediateDelivery.Migrations
                         name: "FK_Neighborhoods_Cities_CityId",
                         column: x => x.CityId,
                         principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -105,7 +103,7 @@ namespace ImmediateDelivery.Migrations
                     Document = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    NeighborhoodId = table.Column<int>(type: "int", nullable: false),
+                    NeighborhoodId = table.Column<int>(type: "int", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false),
@@ -131,8 +129,7 @@ namespace ImmediateDelivery.Migrations
                         name: "FK_AspNetUsers_Neighborhoods_NeighborhoodId",
                         column: x => x.NeighborhoodId,
                         principalTable: "Neighborhoods",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -220,6 +217,30 @@ namespace ImmediateDelivery.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Package",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WrapperType = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false),
+                    Long = table.Column<int>(type: "int", nullable: false),
+                    Widt = table.Column<int>(type: "int", nullable: false),
+                    Delicate = table.Column<bool>(type: "bit", nullable: false),
+                    Contain = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Package", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Package_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -268,7 +289,8 @@ namespace ImmediateDelivery.Migrations
                 name: "IX_Cities_Name_StateId",
                 table: "Cities",
                 columns: new[] { "Name", "StateId" },
-                unique: true);
+                unique: true,
+                filter: "[StateId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_StateId",
@@ -284,7 +306,13 @@ namespace ImmediateDelivery.Migrations
                 name: "IX_Neighborhoods_Name_CityId",
                 table: "Neighborhoods",
                 columns: new[] { "Name", "CityId" },
-                unique: true);
+                unique: true,
+                filter: "[CityId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Package_UserId",
+                table: "Package",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_States_Name",
@@ -309,6 +337,9 @@ namespace ImmediateDelivery.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Package");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

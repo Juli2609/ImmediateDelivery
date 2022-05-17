@@ -1,33 +1,57 @@
-﻿@model ImmediateDelivery.Models.EditUserViewModel
+﻿@model ImmediateDelivery.Models.AddUserViewModel
+
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Register";
 }
 
-<flash dismissable="true" />
-<h2>Editar</h2>
+<h2>Registrar</h2>
 
-<h4>Usuario</h4>
+<h4>Mensajero</h4>
+<div class="text-success">
+    <h3>
+        @ViewBag.Message
+    </h3>
+</div>
 <hr />
 <div class="row">
-    <div class="col-md-8">
-        <form asp-action="ChangeUser" enctype="multipart/form-data">
+    <div class="col-md-12">
+        <form asp-action="CreateMessenger" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ImageId" />
-            <input type="hidden" asp-for="States" />
+            <input type="hidden" asp-for="UserType" />
             <input type="hidden" asp-for="Cities" />
             <input type="hidden" asp-for="Neighborhoods" />
+            <input type="hidden" asp-for="States" />
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PasswordConfirm" class="control-label"></label>
+                        <input asp-for="PasswordConfirm" class="form-control" />
+                        <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
 
             <partial name="_User" />
 
             <div class="form-group mt-2">
-                <input type="submit" value="Guardar" class="btn btn-outline-primary" />
-                <a asp-action="ChangePassword" class="btn btn-outline-secondary">Cambiar Contraseña</a>
+                <input type="submit" value="Registrar" class="btn btn-outline-primary" />
             </div>
         </form>
-    </div>
-    <div class="col-md-4 zoom">
-        <img src="@Model.ImageFullPath" style="width:200px;height:200px;border-radius:50%" />
     </div>
 </div>
 
@@ -83,4 +107,4 @@
             })
         });
     </script>
-}}
+}

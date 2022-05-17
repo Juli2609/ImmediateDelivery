@@ -22,6 +22,7 @@ namespace ImmediateDelivery.Data
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Juliana", "Arroyave", "Juli@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.Admin);
             await CheckUserAsync("2020", "Mariana", "Raigosa", "Mari@yopmail.com", "311 322 2046", "Calle Sol Calle Luna", UserType.User);
+            await CheckUserAsync("3030", "Kang", "Song", "Kang@yopmail.com", "333 387 8765", "Calle 34 # 6 - 4 ", UserType.Messenger);
 
         }
 
@@ -209,10 +210,9 @@ namespace ImmediateDelivery.Data
                             }
                         }
                     }
-               });
+                });
             }
             await _context.SaveChangesAsync();
         }
     }
 }
-

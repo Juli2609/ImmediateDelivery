@@ -146,6 +146,74 @@ namespace ImmediateDelivery.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CreateMessenger()
+        {
+            AddUserViewModel model = new()
+            {
+                Id = Guid.Empty.ToString(),
+                Cities = await _combosHelper.GetComboCitiesAsync(0),
+                Neighborhoods = await _combosHelper.GetComboNeighborhoodsAsync(0),
+                States = await _combosHelper.GetComboStatesAsync(),
+                UserType = UserType.Messenger,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateMessenger(AddUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Guid imageId = Guid.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                }
+
+                model.ImageId = imageId;
+                User user = await _userHelper.AddUserAsync(model);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
+                    model.Cities = await _combosHelper.GetComboCitiesAsync(model.StateId);
+                    model.Neighborhoods = await _combosHelper.GetComboNeighborhoodsAsync(model.CityId);
+                    model.States = await _combosHelper.GetComboStatesAsync();
+                    return View(model);
+                }
+
+                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _mailHelper.SendMail(
+                    $"{model.FirstName} {model.LastName}",
+                    model.Username,
+                    "ImmediateDelivery - Confirmación de Email",
+                    $"<h1>ImmediateDelivery - Confirmación de Email</h1>" +
+                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
+                        $"<hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "Las instrucciones para habilitar el administrador han sido enviadas al correo.";
+                    return View(model);
+                }
+
+                ModelState.AddModelError(string.Empty, response.Message);
+            }
+
+            model.Cities = await _combosHelper.GetComboCitiesAsync(model.StateId);
+            model.Neighborhoods = await _combosHelper.GetComboNeighborhoodsAsync(model.CityId);
+            model.States = await _combosHelper.GetComboStatesAsync();
+            return View(model);
+        }
+
+
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -356,6 +424,4 @@ namespace ImmediateDelivery.Controllers
         }
 
     }
-
 }
-

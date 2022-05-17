@@ -35,13 +35,13 @@ namespace ImmediateDelivery.Models
         [Display(Name = "Foto")]
         public Guid ImageId { get; set; }
 
-        //TODO: Pending to put the correct paths
+
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"https://localhost:7033/images/noimage.png"
-            : $"https://shoppingprep.blob.core.windows.net/users/{ImageId}";
+            : $"https://shoppingzulu.blob.core.windows.net/users/{ImageId}";
 
-        [Display(Name = "Image")]
+        [Display(Name = "Imagen")]
         public IFormFile? ImageFile { get; set; }
 
         [Display(Name = "Despartamento")]
@@ -60,12 +60,12 @@ namespace ImmediateDelivery.Models
 
         [Display(Name = "Barrio / Vereda ")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un Barrio/Vereda")]
-       
+
         public int NeighborhoodId { get; set; }
 
         public IEnumerable<SelectListItem> Neighborhoods { get; set; }
 
-       
+
     }
 
 }

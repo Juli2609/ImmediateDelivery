@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+body {
+    background: url(../Images/cajas.jpg);
+    background-repeat:no-repeat;
+    background-size: cover;
+}
