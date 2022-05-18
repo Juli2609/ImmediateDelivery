@@ -27,6 +27,7 @@ namespace ImmediateDelivery.Controllers
         {
             return View(await _context.States
                 .Include(s => s.Cities)
+                .ThenInclude(c => c.Neighborhoods)
                 .ToListAsync());
         }
 
