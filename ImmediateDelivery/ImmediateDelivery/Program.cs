@@ -11,8 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DataContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-}
-);
+});
 
 //TODO: Make strongest password
 builder.Services.AddIdentity<User, IdentityRole>(cfg =>
@@ -28,7 +27,6 @@ builder.Services.AddIdentity<User, IdentityRole>(cfg =>
     cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     cfg.Lockout.MaxFailedAccessAttempts = 3;
     cfg.Lockout.AllowedForNewUsers = true;
-
 })  
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<DataContext>();

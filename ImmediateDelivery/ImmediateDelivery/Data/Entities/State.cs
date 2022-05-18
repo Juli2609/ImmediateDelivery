@@ -15,6 +15,11 @@ namespace ImmediateDelivery.Data.Entities
 
         [Display(Name = "Ciudad")]
         public int CitiesNumber => Cities == null ? 0 : Cities.Count;
-        
+
+        [Display(Name = "Barrios/Veredas")]
+        public int NeighborhoodsNumber => Cities == null ? 0 : Cities.Sum(c => c.NeighborhoodsNumber);
+
+
+
     }
 }

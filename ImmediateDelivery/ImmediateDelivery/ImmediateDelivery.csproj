@@ -15,10 +15,10 @@
     <Content Remove="wwwroot\Images\forbieden2.png" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Include="C:\Users\Usuario\Desktop\Programación2\Program.cs" Link="Program.cs" />
     <Compile Include="C:\Users\Usuario\Desktop\Programación\Program.cs" Link="Program.cs" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="3.2.0" />

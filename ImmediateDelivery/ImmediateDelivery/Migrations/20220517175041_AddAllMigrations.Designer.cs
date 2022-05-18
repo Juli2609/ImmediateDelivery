@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImmediateDelivery.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220513163402_addallmigrations")]
-    partial class addallmigrations
+    [Migration("20220517175041_AddAllMigrations")]
+    partial class AddAllMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
