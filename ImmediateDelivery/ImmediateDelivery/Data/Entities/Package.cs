@@ -32,6 +32,16 @@ namespace ImmediateDelivery.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public String Contain { get; set; }
 
+        [Display(Name = "Foto")]
+        public Guid ImageId { get; set; }
+
+        public PackageType Type { get; set; }
+
+        [Display(Name = "Foto")]
+        public string ImageFullPath => ImageId == Guid.Empty
+            ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
+            : $"https://shoppingzulu.blob.core.windows.net/products/{ImageId}";
+    
         public User User { get; set; }
     }
 }

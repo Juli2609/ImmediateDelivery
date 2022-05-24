@@ -1,29 +1,27 @@
 ﻿@model ImmediateDelivery.Models.NeighborhoodViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Barrio/Vereda";
+    Layout = null;
 }
 
-<h1>Crear</h1>
+<flash dismissable="true" />
 
-<h4>Barrio/Vereda</h4>
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="AddNeighborhood">
+<div class="container smfont">
+    <form asp-action="AddNeighborhood" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+        <div class="box-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type ="hidden" asp-for="CityId"/>
-            <partial name="_Neighborhood"/>
-            
-            <div class="form-group mt-2">
-                <input type="submit" value="Crear" class="btn btn-outline-primary" />
-                <a asp-action="DetailsCity"asp-route-id="@Model.CityId"class="btn btn-outline-success">Regresar</a>
-            </div>
-        </form>
-    </div>
+            <input type="hidden" asp-for="CityId" />
+            <partial name="_Neighborhood" />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+    </form>
 </div>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

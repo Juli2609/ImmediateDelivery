@@ -3,6 +3,7 @@ using ImmediateDelivery.Data.Entities;
 using ImmediateDelivery.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Vereyon.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,6 @@ builder.Services.AddDbContext<DataContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-//TODO: Make strongest password
 builder.Services.AddIdentity<User, IdentityRole>(cfg =>
 {
     cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddFlashMessage();
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
