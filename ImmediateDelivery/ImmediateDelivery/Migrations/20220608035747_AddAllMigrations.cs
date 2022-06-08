@@ -24,6 +24,19 @@ namespace ImmediateDelivery.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PackageTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PackageTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "States",
                 columns: table => new
                 {
@@ -34,6 +47,19 @@ namespace ImmediateDelivery.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_States", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VehicleTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,7 +244,7 @@ namespace ImmediateDelivery.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Package",
+                name: "Packages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -226,18 +252,128 @@ namespace ImmediateDelivery.Migrations
                     WrapperType = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Height = table.Column<int>(type: "int", nullable: false),
                     Long = table.Column<int>(type: "int", nullable: false),
-                    Widt = table.Column<int>(type: "int", nullable: false),
+                    Width = table.Column<int>(type: "int", nullable: false),
                     Delicate = table.Column<bool>(type: "bit", nullable: false),
                     Contain = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PackageTypeId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FullNameRecipient = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: false),
+                    DocRecipient = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<int>(type: "int", nullable: false),
+                    AddressRecipient = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Packages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Packages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Packages_PackageTypes_PackageTypeId",
+                        column: x => x.PackageTypeId,
+                        principalTable: "PackageTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sends",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HistoryStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sends", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sends_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vehicles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Plaque = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    VehicleTypeId = table.Column<int>(type: "int", nullable: false),
+                    BrandVehicle = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Package", x => x.Id);
+                    table.PrimaryKey("PK_Vehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Package_AspNetUsers_UserId",
+                        name: "FK_Vehicles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Vehicles_VehicleTypes_VehicleTypeId",
+                        column: x => x.VehicleTypeId,
+                        principalTable: "VehicleTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemporalSends",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PackageId = table.Column<int>(type: "int", nullable: true),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemporalSends", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TemporalSends_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TemporalSends_Packages_PackageId",
+                        column: x => x.PackageId,
+                        principalTable: "Packages",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SendDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SendId = table.Column<int>(type: "int", nullable: true),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PackageId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SendDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SendDetails_Packages_PackageId",
+                        column: x => x.PackageId,
+                        principalTable: "Packages",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SendDetails_Sends_SendId",
+                        column: x => x.SendId,
+                        principalTable: "Sends",
                         principalColumn: "Id");
                 });
 
@@ -310,14 +446,80 @@ namespace ImmediateDelivery.Migrations
                 filter: "[CityId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Package_UserId",
-                table: "Package",
+                name: "IX_Packages_Id_UserId",
+                table: "Packages",
+                columns: new[] { "Id", "UserId" },
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Packages_PackageTypeId",
+                table: "Packages",
+                column: "PackageTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Packages_UserId",
+                table: "Packages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PackageTypes_Description",
+                table: "PackageTypes",
+                column: "Description",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SendDetails_PackageId",
+                table: "SendDetails",
+                column: "PackageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SendDetails_SendId",
+                table: "SendDetails",
+                column: "SendId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sends_UserId",
+                table: "Sends",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_States_Name",
                 table: "States",
                 column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TemporalSends_PackageId",
+                table: "TemporalSends",
+                column: "PackageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TemporalSends_UserId",
+                table: "TemporalSends",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_Id_UserId",
+                table: "Vehicles",
+                columns: new[] { "Id", "UserId" },
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_UserId",
+                table: "Vehicles",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_VehicleTypeId",
+                table: "Vehicles",
+                column: "VehicleTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleTypes_Type",
+                table: "VehicleTypes",
+                column: "Type",
                 unique: true);
         }
 
@@ -339,13 +541,31 @@ namespace ImmediateDelivery.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Package");
+                name: "SendDetails");
+
+            migrationBuilder.DropTable(
+                name: "TemporalSends");
+
+            migrationBuilder.DropTable(
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Sends");
+
+            migrationBuilder.DropTable(
+                name: "Packages");
+
+            migrationBuilder.DropTable(
+                name: "VehicleTypes");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "PackageTypes");
 
             migrationBuilder.DropTable(
                 name: "Neighborhoods");

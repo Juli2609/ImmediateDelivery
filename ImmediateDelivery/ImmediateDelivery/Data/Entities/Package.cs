@@ -21,7 +21,7 @@ namespace ImmediateDelivery.Data.Entities
 
         [Display(Name = "Ancho")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public int Widt { get; set; }
+        public int Width { get; set; }
 
         [Display(Name = "¿Delicado?")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
@@ -30,18 +30,33 @@ namespace ImmediateDelivery.Data.Entities
         [Display(Name = "Contenido del paquete")]
         [MaxLength(100, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public String Contain { get; set; }
+        public string Contain { get; set; }
 
-        [Display(Name = "Foto")]
-        public Guid ImageId { get; set; }
+        [Display(Name = "Tipo paquete")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public PackageType PackageType { get; set; }
 
-        public PackageType Type { get; set; }
-
-        [Display(Name = "Foto")]
-        public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
-            : $"https://shoppingzulu.blob.core.windows.net/products/{ImageId}";
-    
         public User User { get; set; }
+
+        [Display(Name = "Nombre")]
+        [MaxLength(35, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public string FullNameRecipient { get; set; }
+
+        [Display(Name = "Documento")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public int DocRecipient { get; set; }
+
+        [Display(Name = "Teléfono")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public int PhoneNumber { get; set; }
+
+        [Display(Name = "Dirección")]
+        [MaxLength(200, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public string AddressRecipient { get; set; }
+
+        public ICollection<SendDetail> SendDetails { get; set; }
+
     }
 }

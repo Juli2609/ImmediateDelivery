@@ -10,7 +10,6 @@ namespace ImmediateDelivery.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Description { get; set; }
 
-        public Package Package { get; set; }
-        public int PackageId { get; set; }
+      ///  public ICollection<Package> Packages { get; set; }
     }
 }

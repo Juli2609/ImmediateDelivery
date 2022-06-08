@@ -8,39 +8,82 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ImmediateDelivery.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link href="//db.onlinewebfonts.com/c/e43f1db066f2bdd417313735b51574b6?family=Brixton+Outline" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-darkborder-bottom box-shadow">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <font size="8" @*style="FONT-SIZE:xxx-large;*@>
+                        <font face:"Brixton Outline" style="color:#000000;FONT-FAMILY: FANGSONG" ;>
+                            <div class="zoom">
+                                ~ I M M E D I A T E <img src="~/Images/LogoID.png" width="80" height="80" /> D E L I V E R Y ~ </>
+                            </div>
+                        </font>
+                    </font>
+                </a>
+
+            </div>
+        </nav>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-info border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><font size="6"><font face=”Candara” style="color:#000000">
-                    <img src="~/Images/Imagen2.png" width="80" height="80" />
-                    </font></font></a>
+
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><strong> Inicio </strong></></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Políticas</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy"><strong> Políticas </strong></a>
                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Mensajeros Disponibles</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Messengers"><strong> Mensajeros Disponibles </strong></a>
                         </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Messenger"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="Index"><strong> Vehículos </strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Histories" asp-action="Index"> <strong> Envíos </strong></a>
+                            </li>
+
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Packages" asp-action="Index"><strong> Mis Paquetes </strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="Index"><strong> Vehículos Disponibles </strong></a>
+                            </li>
+                        
+                        }
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="States" asp-action="Index">Ubicaciones</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="States" asp-action="Index"><strong> Ubicaciones </strong></a>
                             </li>
-                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Usuarios</a>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index"><strong> Usuarios </strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Packages" asp-action="Index"><strong> Paquetes </strong></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="Index"><strong> Vehículos </strong></a>
                             </li>
                         }
                     </ul>
+
                     <ul class="nav navbar-nav navbar-right">
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -48,20 +91,21 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@User.Identity.Name</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Cerrar Sesión</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout"><button type="submit" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-arrow-right-to-bracket"></i> Cerrar Sesión </button></a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login"><button type="submit" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión </button></a>
                             </li>
                         }
                     </ul>
-
                 </div>
+
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -70,13 +114,15 @@
     </div>
     <footer class="border-top footer text-muted footer-page" style="width:100%;position:fixed;bottom:0">
         <div class="container">
-            &copy; 2022 - ImmediateDelivery - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - ImmediateDelivery - <a asp-area="" asp-controller="Home" asp-action="Privacy">Políticas de Privacidad</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/font-awesome/js/fontawesome.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

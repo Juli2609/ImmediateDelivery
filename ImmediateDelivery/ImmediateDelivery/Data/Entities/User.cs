@@ -33,7 +33,6 @@ namespace ImmediateDelivery.Data.Entities
         [Display(Name = "Foto")]
         public Guid ImageId { get; set; }
 
-
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"https://localhost:7033/images/noimage.png"
@@ -52,6 +51,15 @@ namespace ImmediateDelivery.Data.Entities
 
         [Display(Name = "Paquetes")]
         public int PackagesNumber => Packages == null ? 0 : Packages.Count;
+
+        public ICollection<Send> Sends { get; set; }
+
+        public ICollection<Vehicle> Vehicles { get; set; }
+
+        [Display(Name = "Vehiculos")]
+        public int VehiclesNumber => Vehicles == null ? 0 : Vehicles.Count;
+
+
 
     }
 }

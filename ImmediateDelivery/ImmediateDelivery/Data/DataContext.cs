@@ -15,6 +15,11 @@ namespace ImmediateDelivery.Data
         public DbSet<State> States  { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<PackageType> PackageTypes { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<VehicleType> VehicleTypes { get; set; }
+        public DbSet<Send> Sends { get; set; }
+        public DbSet<SendDetail> SendDetails { get; set; }
+        public DbSet<TemporalSend> TemporalSends { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,8 +27,10 @@ namespace ImmediateDelivery.Data
             modelBuilder.Entity<State>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<City>().HasIndex("Name","StateId").IsUnique();
             modelBuilder.Entity<Neighborhood>().HasIndex("Name", "CityId").IsUnique();
-            modelBuilder.Entity<Package>().HasIndex(c => c.Id).IsUnique();
-            modelBuilder.Entity<PackageType>().HasIndex("Description", "PackageId").IsUnique();
+            modelBuilder.Entity<Package>().HasIndex("Id", "UserId").IsUnique();
+            modelBuilder.Entity<PackageType>().HasIndex(c => c.Description).IsUnique();
+            modelBuilder.Entity<Vehicle>().HasIndex("Id", "UserId").IsUnique();
+            modelBuilder.Entity<VehicleType>().HasIndex(c => c.Type).IsUnique();
         }
         }
 }

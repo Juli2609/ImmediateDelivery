@@ -1,0 +1,46 @@
+﻿@model ImmediateDelivery.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "Messengers";
+}
+<style type="text/css">
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid lightgray;
+        box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+        border-radius: 15px;
+        font-family: sans-serif;
+        margin: 5px;
+    }
+</style>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 mt-1">
+   
+        @foreach (var item in Model.Messengers)
+        {
+            <div class="col">
+                <div class="card h-100">
+                  
+                    <div class="card-body">
+                        <h4 class="card-title text-navy"><Center> @item.FullName</Center> </h4>
+                        <h5 class="card-text smfnt"><Center> Celular: @item.PhoneNumber</Center></h5>
+                        <h5 class="card-text smfnt"><Center>Email:@item.Email</Center></h5>
+                    </div>
+                      <div class="text-center zoom">
+                        <img src="@item.ImageFullPath" style="height:150px; max-width:200px;" class="text-center" alt=@item.Id />
+                    </div>
+                    <br/>
+                    <div class="card-footer text-center">
+                    </div>
+                </div>
+            </div>
+        }
+    
+ 
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

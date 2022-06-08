@@ -1,0 +1,26 @@
+﻿@model ImmediateDelivery.Data.Entities.Vehicle
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<flash dismissable="true" />
+
+<h1>Detalles</h1>
+
+<div>
+    <partial name="_VehicleDetails" />
+</div>
+
+<th>
+    <a asp-controller="Home" asp-action="Messengers" class="btn btn-outline-success">Mensajeros</a>
+</th>
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+
+
+

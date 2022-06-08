@@ -7,16 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Img\**" />
+    <Content Remove="Views\Img\**" />
+    <EmbeddedResource Remove="Views\Img\**" />
+    <None Remove="Views\Img\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\Images\1.png" />
     <Content Remove="wwwroot\Images\2.webp" />
     <Content Remove="wwwroot\Images\4.png" />
     <Content Remove="wwwroot\Images\forbiden1" />
     <Content Remove="wwwroot\Images\forbiden2.webp" />
     <Content Remove="wwwroot\Images\forbieden2.png" />
+    <Content Remove="wwwroot\Images\pixlr-bg-result.png" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="LanguageExt.Core" Version="4.1.1" />
     <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.5" />
@@ -27,7 +36,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="NetTopologySuite" Version="2.4.0" />
+    <PackageReference Include="SchemaGenerator" Version="1.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
     <PackageReference Include="Vereyon.Web.FlashMessage" Version="3.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>

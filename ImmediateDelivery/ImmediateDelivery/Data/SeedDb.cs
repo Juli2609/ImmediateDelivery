@@ -8,11 +8,13 @@ namespace ImmediateDelivery.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IBlobHelper _blobHelper;
 
-        public SeedDb(DataContext context, IUserHelper userHelper)
+        public SeedDb(DataContext context, IUserHelper userHelper, IBlobHelper blobHelper)
         {
             _context = context;
             _userHelper = userHelper;
+            _blobHelper = blobHelper;
         }
 
         public async Task SeedAsync()
@@ -20,10 +22,42 @@ namespace ImmediateDelivery.Data
             await _context.Database.EnsureCreatedAsync();
             await CheckStatesAsync();
             await CheckRolesAsync();
-            await CheckUserAsync("1010", "Juliana", "Arroyave", "Juli@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.Admin);
-            await CheckUserAsync("2020", "Mariana", "Raigosa", "Mari@yopmail.com", "311 322 2046", "Calle Sol Calle Luna", UserType.User);
-            await CheckUserAsync("3030", "Kang", "Song", "Kang@yopmail.com", "333 387 8765", "Calle 34 # 6 - 4 ", UserType.Messenger);
+            await CheckUserAsync("1010", "Juliana", "Arroyave", "Juli@yopmail.com", "322 311 4620", "Calle Luna Calle Sol","Juli.jpeg", UserType.Admin);
+            await CheckUserAsync("2020", "Mariana", "Raigosa", "Mari@yopmail.com", "311 322 2046", "Calle Sol Calle Luna", "Mari.jpeg", UserType.User);
+            await CheckUserAsync("3030", "Kang", "Song", "Kang@yopmail.com", "333 387 8765", "Calle 34 # 6 - 4 ", "SongKang.png", UserType.Messenger);
+            await CheckUserAsync("4040", "MinHo", "Lee", "MinHo@yopmail.com", "393 357 6587", "Calle 87 # 4 - 9 ", "LeeMinHo.jpg", UserType.Messenger);
+            await CheckUserAsync("5050", "Juan", "Londoño", "Maluma@yopmail.com", "387 765 3245", "Calle 9 # 67 - 00 ", "Maluma.jpg", UserType.Messenger);
+            await CheckUserAsync("6060", "Camilo", "Echeverri", "Camilo@yopmail.com", "347 986 8962", "Calle 3 # 30 - 27 ", "Camilo.jpg", UserType.Messenger);
+            await CheckPackageTypesAsync();
+            await CheckVehicleTypesAsync();
+
         }
+
+        private async Task CheckVehicleTypesAsync()
+        {
+            if (!_context.VehicleTypes.Any())
+            {
+                _context.VehicleTypes.Add(new VehicleType { Type = "Moto" });
+                _context.VehicleTypes.Add(new VehicleType { Type = "Automóvil" });
+                _context.VehicleTypes.Add(new VehicleType { Type = "Camioneta" });
+                _context.VehicleTypes.Add(new VehicleType { Type = "Camión" });
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckPackageTypesAsync()
+        {
+            if (!_context.PackageTypes.Any())
+            {
+                _context.PackageTypes.Add(new PackageType { Description = "Pequeño" });
+                _context.PackageTypes.Add(new PackageType { Description = "Mediano" });
+                _context.PackageTypes.Add(new PackageType { Description = "Grande" });
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
 
         private async Task<User> CheckUserAsync(
             string document,
@@ -32,8 +66,10 @@ namespace ImmediateDelivery.Data
             string email,
             string phone,
             string address,
+            string image,
             UserType userType)
         {
+            Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
             User user = await _userHelper.GetUserAsync(email);
             if (user == null)
             {
@@ -48,6 +84,7 @@ namespace ImmediateDelivery.Data
                     Document = document,
                     Neighborhood = _context.Neighborhoods.FirstOrDefault(),
                     UserType = userType,
+                    ImageId = imageId,
                 };
 
                 await _userHelper.AddUserAsync(user, "123456");

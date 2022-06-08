@@ -1,0 +1,24 @@
+﻿@model ImmediateDelivery.Data.Entities.Vehicle
+
+<h4>Vehículo</h4>
+<hr />
+    <dl class="row">
+        <dt class="col-sm-6">
+            @Html.DisplayNameFor(model => model.VehicleType)
+        </dt>
+        <dd class="col-sm-6">
+            @Html.DisplayFor(model => model.VehicleType.Type)
+        </dd>
+        <dt class="col-sm-6">
+            @Html.DisplayNameFor(model => model.BrandVehicle)
+        </dt>
+        <dd class="col-sm-6">
+            @Html.DisplayFor(model => model.BrandVehicle)
+        </dd>
+        <dt class="col-sm-6">
+            @Html.DisplayNameFor(model => model.Color)
+        </dt>
+        <dd class="col-sm-6">
+            @Html.DisplayFor(model => model.Color)
+        </dd>
+</dl>

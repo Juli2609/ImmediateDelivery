@@ -1,0 +1,100 @@
+﻿@model ImmediateDelivery.Models.CreatePackageViewModel
+
+<div class="row">
+    <div class="col-md-8">
+      <h3 >Información Paquete  </h3>
+        <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="WrapperType" Tipo de envoltorio></label>
+            </br>
+            <select name="WrapperType">
+                <option value="none">Seleccione una opcion...</option>
+                <option value="Papel">Papel</option>
+                <option value="Cartón">Cartón</option>
+                <option value="Metal">Metal</option>
+                <option value="Plástico">Plástico</option>
+                <option value="Vidrio">Vidrio</option>
+            </select>
+            <span asp-validation-for="WrapperType" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="Height" class="control-label"></label>  (cm)
+            <input asp-for="Height" class="form-control" />   
+            <span asp-validation-for="Height" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="Long" class="control-label"></label>   (cm)
+            <input asp-for="Long" class="form-control" />
+            <span asp-validation-for="Long" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="Width" class="control-label"></label>  (cm)
+            <input asp-for="Width" class="form-control" />
+            <span asp-validation-for="Width" class="text-danger"></span>
+        </div>
+
+      
+        <div class="form-group">
+            <span class="required"></span>
+            <label asp-for="Delicate" class="control-label"></label>
+            </br>
+            <input type="radio" name="Delicate" value="true" />
+             Si
+             <input type="radio" name="Delicate" value="false" />
+             No
+            <span asp-validation-for="Delicate" class="text-danger"></span>
+        </div>
+       
+
+        <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="Contain" class="control-label"></label>
+            <input asp-for="Contain" class="form-control" />
+            <span asp-validation-for="Contain" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="PackageTypeId" class="control-label"></label>
+            <select asp-for="PackageTypeId" asp-items="Model.PackageTypes" class="form-control"></select>
+            <span asp-validation-for="PackageTypeId" class="text-danger"></span>
+        </div>
+        <br />
+         <h3 >Información Destinatario </h3>
+        <div class="col-md-8">
+            <div class="form-group">
+                <span class="required">*</span>
+                <label asp-for="FullNameRecipient" class="control-label"></label>
+                <input asp-for="FullNameRecipient" class="form-control" />
+                <span asp-validation-for="FullNameRecipient" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <span class="required">*</span>
+                <label asp-for="DocRecipient" class="control-label"></label>
+                <input asp-for="DocRecipient" class="form-control" />
+                <span asp-validation-for="DocRecipient" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+            <span class="required">*</span>
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+            <div class="form-group">
+                <span class="required">*</span>
+                <label asp-for="AddressRecipient" class="control-label"></label>
+                <input asp-for="AddressRecipient" class="form-control" />
+                <span asp-validation-for="AddressRecipient" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div>

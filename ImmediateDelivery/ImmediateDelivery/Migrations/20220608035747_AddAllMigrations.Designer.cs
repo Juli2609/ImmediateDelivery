@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImmediateDelivery.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220517175041_AddAllMigrations")]
+    [Migration("20220608035747_AddAllMigrations")]
     partial class AddAllMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -86,6 +86,11 @@ namespace ImmediateDelivery.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("AddressRecipient")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("Contain")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -94,16 +99,30 @@ namespace ImmediateDelivery.Migrations
                     b.Property<bool>("Delicate")
                         .HasColumnType("bit");
 
+                    b.Property<int>("DocRecipient")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullNameRecipient")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
                     b.Property<int>("Height")
                         .HasColumnType("int");
 
                     b.Property<int>("Long")
                         .HasColumnType("int");
 
+                    b.Property<int>("PackageTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Widt")
+                    b.Property<int>("Width")
                         .HasColumnType("int");
 
                     b.Property<string>("WrapperType")
@@ -113,9 +132,88 @@ namespace ImmediateDelivery.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PackageTypeId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Package");
+                    b.HasIndex("Id", "UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Packages");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.PackageType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Description")
+                        .IsUnique();
+
+                    b.ToTable("PackageTypes");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Send", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("HistoryStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Sends");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.SendDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SendId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackageId");
+
+                    b.HasIndex("SendId");
+
+                    b.ToTable("SendDetails");
                 });
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.State", b =>
@@ -137,6 +235,32 @@ namespace ImmediateDelivery.Migrations
                         .IsUnique();
 
                     b.ToTable("States");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.TemporalSend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TemporalSends");
                 });
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.User", b =>
@@ -233,6 +357,69 @@ namespace ImmediateDelivery.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Vehicle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("BrandVehicle")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Plaque")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("VehicleTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VehicleTypeId");
+
+                    b.HasIndex("Id", "UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.VehicleType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Type")
+                        .IsUnique();
+
+                    b.ToTable("VehicleTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -388,9 +575,56 @@ namespace ImmediateDelivery.Migrations
 
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.Package", b =>
                 {
+                    b.HasOne("ImmediateDelivery.Data.Entities.PackageType", "PackageType")
+                        .WithMany()
+                        .HasForeignKey("PackageTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ImmediateDelivery.Data.Entities.User", "User")
                         .WithMany("Packages")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("PackageType");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Send", b =>
+                {
+                    b.HasOne("ImmediateDelivery.Data.Entities.User", "User")
+                        .WithMany("Sends")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.SendDetail", b =>
+                {
+                    b.HasOne("ImmediateDelivery.Data.Entities.Package", "Package")
+                        .WithMany("SendDetails")
+                        .HasForeignKey("PackageId");
+
+                    b.HasOne("ImmediateDelivery.Data.Entities.Send", "Send")
+                        .WithMany("SendDetails")
+                        .HasForeignKey("SendId");
+
+                    b.Navigation("Package");
+
+                    b.Navigation("Send");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.TemporalSend", b =>
+                {
+                    b.HasOne("ImmediateDelivery.Data.Entities.Package", "Package")
+                        .WithMany()
+                        .HasForeignKey("PackageId");
+
+                    b.HasOne("ImmediateDelivery.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Package");
 
                     b.Navigation("User");
                 });
@@ -402,6 +636,23 @@ namespace ImmediateDelivery.Migrations
                         .HasForeignKey("NeighborhoodId");
 
                     b.Navigation("Neighborhood");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Vehicle", b =>
+                {
+                    b.HasOne("ImmediateDelivery.Data.Entities.User", "User")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("ImmediateDelivery.Data.Entities.VehicleType", "VehicleType")
+                        .WithMany()
+                        .HasForeignKey("VehicleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("VehicleType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -465,6 +716,16 @@ namespace ImmediateDelivery.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Package", b =>
+                {
+                    b.Navigation("SendDetails");
+                });
+
+            modelBuilder.Entity("ImmediateDelivery.Data.Entities.Send", b =>
+                {
+                    b.Navigation("SendDetails");
+                });
+
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.State", b =>
                 {
                     b.Navigation("Cities");
@@ -473,6 +734,10 @@ namespace ImmediateDelivery.Migrations
             modelBuilder.Entity("ImmediateDelivery.Data.Entities.User", b =>
                 {
                     b.Navigation("Packages");
+
+                    b.Navigation("Sends");
+
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }

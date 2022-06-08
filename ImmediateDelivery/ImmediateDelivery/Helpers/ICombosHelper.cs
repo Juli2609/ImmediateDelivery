@@ -7,8 +7,10 @@ namespace ImmediateDelivery.Helpers
         Task<IEnumerable<SelectListItem>> GetComboStatesAsync();
         Task<IEnumerable<SelectListItem>> GetComboCitiesAsync(int StateId);
         Task<IEnumerable<SelectListItem>> GetComboNeighborhoodsAsync(int cityId);
+        Task<IEnumerable<SelectListItem>> GetComboPackageTypesAsync();
+        Task<IEnumerable<SelectListItem>> GetComboVehicleTypesAsync();
 
-        
+
 
     }
 }

@@ -57,6 +57,35 @@ namespace ImmediateDelivery.Helpers
 
             list.Insert(0, new SelectListItem { Text = "[Seleccione un Barrio/Vereda...", Value = "0" });
             return list;
+        }  
+
+        public async Task<IEnumerable<SelectListItem>> GetComboPackageTypesAsync()
+        {
+                List<SelectListItem> list = await _context.PackageTypes.Select(c => new SelectListItem
+                {
+                    Text = c.Description,
+                    Value = c.Id.ToString()
+                })
+                 .OrderBy(c => c.Text)
+                 .ToListAsync();
+
+                list.Insert(0, new SelectListItem { Text = "[Seleccione un Tipo de paquete...", Value = "0" });
+                return list;
+            
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetComboVehicleTypesAsync()
+        {
+            List<SelectListItem> list = await _context.VehicleTypes.Select(c => new SelectListItem
+            {
+                Text = c.Type,
+                Value = c.Id.ToString()
+            })
+               .OrderBy(c => c.Text)
+               .ToListAsync();
+
+            list.Insert(0, new SelectListItem { Text = "[Seleccione un Tipo de vehículo...", Value = "0" });
+            return list;
         }
     }
 }
